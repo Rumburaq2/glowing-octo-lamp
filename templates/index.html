@@ -1,0 +1,63 @@
+{% load socialaccount %}
+{% load extras %}
+
+<html>
+<head>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      font-size: 18px;
+      color: #4CAF50;
+    }
+
+    .login-link {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4285f4; /* Google Blue */
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .login-link:hover {
+      background-color: #357ae8; /* Darker Google Blue */
+    }
+  </style>
+</head>
+<body>
+  <h1>My Gogole Project</h1>
+  {% if user.is_authenticated %}
+      <p>toto je stránka počítače {{ item_id }}</p>
+      <p> primarky key je {{ item_index_val }} </p>
+      <p>tento počíttač má {{ item_description }}</p>
+      <p>tlačítkem níže si pujčíte dané zařízení</p>
+    <p>Welcome, You are logged in as {{ user.email }}</p>
+      <!-- dame sem tlacitko [odeslat] a po kliknuti odesleme vyse zminene
+      promenne do db - item_id, item_describtion, user.username -->
+      {#% setvar item_id + '§' + user.email as pero %#}
+      <form method="post">
+        {% csrf_token %}
+          {#% row = items.objects.all().filter(item_id=item_id) %#}
+          {#%  %#}
+          <input name="email" type="hidden" value="{{ user.email }}"></input>
+          <input name="username" type="hidden" value="{{ user.username}}"></input>
+          <button type="submit" name="pujcit" value="{{ item_id }}"><span>PŮJČIT</span></button>
+          <!-- <a href="loan/">MOR</a> -->
+      </form>
+  {% else %}
+     <a class="login-link" href="{% provider_login_url 'google'%}?next={{ request.path }}">Login With Google</a>
+
+  {% endif %}
+</body>
+</html>

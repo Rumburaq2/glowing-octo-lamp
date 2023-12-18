@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <table>
+        <tr id="header">
+            <th>Stav</th>
+            <th>Student</th>
+            <th>Zařízení</th>
+            <th>Do kdy</th>
+            <th></th>
+        </tr>
+
+        {% for loan in loans %}
+        <tr>
+       {% comment %} <td>{{ loans.student_id.username }} </td> {% endcomment %}
+
+            {% if loan.item_id.item_state == 1 and loan.loan_is_finished == False %}
+            <td><div id="kolecko_green"></div></td>
+            {#% elif loans.item_id.item_state == 2 %#}
+            {% elif loan.item_id.item_state == 2 and loan.loan_is_finished == False %}
+            <td><div id="kolecko_orange"></div></td>
+            {% endif %}
+
+            {% if loan.loan_is_finished %}
+            {% else %}
+            <td>{{ loan.student_id.email }}</td>
+            <td>{{ loan.item_id.item_description }}</td>
+            <td>{{ loan.due_date }}</td>
+                {% if loan.item_id.item_state == 1 %}
+            <form method="post">
+                {% csrf_token %}
+                <th style="border: none;"><button type="submit" name="back" value="{{ loan.id }}"><span>VRÁTIT</span></button></th>
+            </form>
+                {% elif loan.item_id.item_state == 2 %}
+            <form method="post">
+                {% csrf_token %}
+                <th style="border: none;"><button type="submit" name="confirm" value="{{ loan.id }}"><span>POTVRDIT PUJČENÍ</span></button></th>
+            </form>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
